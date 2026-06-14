@@ -21,20 +21,28 @@
     <p>Твой ник: <span id="username">Загрузка...</span></p>
 
     <script>
-        // Инициализируем WebApp Телеграма
+        // Инициализируем WebApp
         const tg = window.Telegram.WebApp;
-        tg.ready(); // Говорим ТГ, что приложение загрузилось
 
-        // Берем данные пользователя
-        const user = tg.initDataUnsafe?.user;
+        // Принудительно расширяем приложение на все окно (на будущее пригодится)
+        tg.expand();
 
-        if (user) {
-            // Если зашли через ТГ, выводим никнейм (или имя, если ника нет)
-            document.getElementById('username').innerText = user.username || user.first_name;
-        } else {
-            // Если открыли просто в браузере на компе
-            document.getElementById('username').innerText = "вы открыли игру вне Телеграма";
+        try {
+            // Проверяем, есть ли вообще данные пользователя
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                const user = tg.initDataUnsafe.user;
+                // Берем юзернейм, если его нет — имя, если и его нет — фамилию
+                const nickname = user.username || user.first_name || user.last_name || "Инкогнито";
+                document.getElementById('username').innerText = nickname;
+            } else {
+                document.getElementById('username').innerText = "Данные ТГ не найдены (открыто вне мессенджера)";
+            }
+        } catch (error) {
+            document.getElementById('username').innerText = "Ошибка скрипта: " + error.message;
         }
+
+        // Только теперь говорим Телеграму, что страница полностью отрисована
+        tg.ready();
     </script>
 </body>
 </html>
