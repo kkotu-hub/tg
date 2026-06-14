@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Моя Игра</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+        h1 { color: #0088cc; }
+    </style>
+</head>
+<body>
+
+    <h1>Привет в игре!</h1>
+    <p>Твой ник: <span id="username">Загрузка...</span></p>
+
+    <script>
+        // Инициализируем WebApp Телеграма
+        const tg = window.Telegram.WebApp;
+        tg.ready(); // Говорим ТГ, что приложение загрузилось
+
+        // Берем данные пользователя
+        const user = tg.initDataUnsafe?.user;
+
+        if (user) {
+            // Если зашли через ТГ, выводим никнейм (или имя, если ника нет)
+            document.getElementById('username').innerText = user.username || user.first_name;
+        } else {
+            // Если открыли просто в браузере на компе
+            document.getElementById('username').innerText = "вы открыли игру вне Телеграма";
+        }
+    </script>
+</body>
+</html>
